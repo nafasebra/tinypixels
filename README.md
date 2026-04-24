@@ -91,7 +91,16 @@ For development mode (editable install):
 pip install -e .
 ```
 
-After installation the CLI command becomes available:
+
+Also if you have installed pipx, just run it:
+
+```
+cd /tinypixels
+pipx install .
+```
+
+After installation the CLI command becomes available.
+
 ```
 tinypixels <path> <options>
 ```
