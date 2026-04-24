@@ -36,9 +36,9 @@ def main():
 
     compress_folder(
         args.folder,
-        output=args.output,
+        output_folder=args.output,
         force_format=args.format,
-        quality=args.quality,
+        jpeg_quality=args.quality,
     )
 
 

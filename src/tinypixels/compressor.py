@@ -167,7 +167,12 @@ def compress_image(img_file: Path, output_path: Path, force_format=None, jpeg_qu
     return output_file, original_size, compressed_size
 
 
-def compress_folder(input_folder, output_folder=None, force_format=None, jpeg_quality=95):
+def compress_folder(
+    input_folder: str,
+    output_folder: str | None = None,
+    force_format: str | None = None,
+    jpeg_quality: int = 95
+):
     input_path = Path(input_folder)
 
     if not input_path.exists():
@@ -178,7 +183,7 @@ def compress_folder(input_folder, output_folder=None, force_format=None, jpeg_qu
     output_path.mkdir(parents=True, exist_ok=True)
 
     image_files = [
-        f for f in input_path.iterdir()
+        f for f in input_path.rglob("*")
         if f.is_file() and f.suffix.lower() in SUPPORTED_FORMATS
     ]
 
