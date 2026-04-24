@@ -1,46 +1,52 @@
-# TinyPixels - A lightweight tool for compressing and optimizing
+# TinyPixels
 
-A fast and simple **command‑line tool for compressing and optimizing images**.  
-It scans a folder, compresses supported image formats, and saves optimized versions while preserving visual quality.
+A fast and lightweight **command‑line tool for compressing and optimizing images in bulk**.
 
-The tool can optionally **convert all images to a specific format** (WebP, JPEG, PNG) and generate a detailed compression report.
+TinyPixels scans a folder, compresses supported image formats, and saves optimized versions while preserving visual quality.  
+It can also **convert images to a specific format** such as WebP, JPEG, or PNG.
+
+Designed to be simple, fast, and useful for developers preparing images for the web.
 
 ---
 
 ## Features
 
-- Batch image compression
+- Fast **batch image compression**
 - Supports many common image formats
-- Optional **format conversion**
+- Optional **format conversion** (WebP / JPEG / PNG)
 - Adjustable **JPEG quality**
-- Optimized settings for each format
-- Animated GIF support
+- Optimized compression settings for each format
+- Animated **GIF support**
 - Automatic fallback to **lossless WebP** for unsupported formats
-- Skips optimized files if they become larger than the original
-- Clean **CLI interface**
-- Can be installed globally and used as a command
+- Skips files when the compressed version becomes larger
+- Generates a **compression summary report**
+- Clean and simple **CLI interface**
 
 ---
 
 ## Supported Formats
 
+TinyPixels supports most commonly used image formats:
+
 ```
-jpg  jpeg  png  webp
-bmp  tiff  tif
-gif  ico
-heic  heif  avif
+jpg   jpeg   png   webp
+bmp   tiff   tif
+gif   ico
+heic  heif   avif
 ```
+
+Some formats may be converted internally before compression.
 
 ---
 
 ## Installation
 
-### Prerequisites
+### Requirements
 
-- Python 3.9 or higher
-- `pip` package manager
+- Python **3.9+**
+- `pip`
 
-You can verify your Python version with:
+Check your Python version:
 
 ```
 python --version
@@ -48,30 +54,28 @@ python --version
 
 ---
 
-### Option 1 — Install with pipx (recommended)
+### Install with pipx (Recommended)
 
 `pipx` installs CLI tools in isolated environments and makes them available globally.
 
-Install `pipx` if you don't have it:
+Install pipx:
 
 ```
 pip install pipx
-
 pipx ensurepath
 ```
 
-Then install **tinypixels**:
+Then install TinyPixels directly from GitHub:
 
 ```
 pipx install git+https://github.com/nafasebra/tinypixels.git
 ```
 
-
 After installation, the `tinypixels` command will be available globally.
 
 ---
 
-### Option 2 — Install from source
+### Install from Source
 
 Clone the repository:
 
@@ -86,79 +90,47 @@ Install the package:
 pip install .
 ```
 
-For development mode (editable install):
+For development (editable install):
+
 ```
 pip install -e .
 ```
 
-
-Also if you have installed pipx, just run it:
+If you prefer pipx for development:
 
 ```
-cd /tinypixels
 pipx install .
-```
-
-After installation the CLI command becomes available.
-
-```
-tinypixels <path> <options>
 ```
 
 ---
 
-## Usage
+## Quick Start
 
-### Basic usage
-
-Optimize all images inside a folder:
-
-Example:
+Compress all images inside a folder:
 
 ```
 tinypixels ./images
 ```
 
+TinyPixels will create an output folder automatically and save optimized images there.
+
 ---
 
-### Output
-
-By default, optimized images are saved inside a new folder named:
+## CLI Usage
 
 ```
-web_optimized/
+tinypixels <input_path> [options]
 ```
 
-This folder will be created inside the input directory.
-
-Example structure:
+Example:
 
 ```
-images/
-
-├─ photo1.jpg
-
-├─ photo2.png
-
-└─ web_optimized/
-
-├─ photo1.jpg
-
-└─ photo2.png
+tinypixels images -o output -f webp -q 85
 ```
 
 ---
 
-### Help command
-
-To see available options and commands:
-
-```
-tinypixels --help
-```
-
-
-## CLI Options
+## Options
 
 ### Output directory
 
@@ -168,7 +140,7 @@ Specify where optimized images should be saved.
 tinypixels images --output optimized
 ```
 
-or
+Short version:
 
 ```
 tinypixels images -o optimized
@@ -198,9 +170,9 @@ tinypixels images -f webp
 
 ### JPEG quality
 
-Control compression quality for JPEG output.
+Control JPEG compression quality.
 
-Default value:
+Default:
 
 ```
 95
@@ -214,50 +186,69 @@ tinypixels images -q 85
 
 ---
 
-### Combine options
+## Output Behavior
 
-You can combine all options together.
-
-Example:
+By default, optimized images are stored in:
 
 ```
-tinypixels images -o output -f jpeg -q 80
+web_optimized/
 ```
+
+This folder is created inside the input directory.
+
+Example structure:
+
+```
+images/
+│
+├─ photo1.jpg
+├─ photo2.png
+│
+└─ web_optimized/
+   ├─ photo1.jpg
+   └─ photo2.png
+```
+
+Original images are **never overwritten**.
 
 ---
 
-## How It Works
+## How TinyPixels Works
 
-For each image in the folder the tool:
+For every image in the input folder:
 
-1. Loads the image
-2. Detects its format
-3. Applies optimized compression settings
-4. Saves the result in the output directory
+1. The image is loaded.
+2. The format is detected.
+3. Format‑specific compression settings are applied.
+4. The optimized image is saved to the output folder.
 
-### PNG
+If the optimized image becomes **larger than the original**, the original file is kept instead.
+
+---
+
+## Compression Settings
+
+#### PNG
 - `compress_level=9`
-- Full optimization
+- Maximum optimization
 - Transparency preserved
 
-### JPEG
+#### JPEG
 - Adjustable quality
 - `subsampling=0` for better color accuracy
-- Progressive encoding enabled
+- Progressive encoding
 
-### WebP
+#### WebP
 - High compression method
-- Lossless by default
+- Lossless when appropriate
 
-### GIF
-- Preserves animation frames
-- Rebuilds optimized GIFs
+#### GIF
+- Animation frames preserved
+- Rebuilt optimized GIF
 
-### Other formats (HEIC, TIFF, BMP…)
+#### Other formats (HEIC, TIFF, BMP...)
 
-Converted to **lossless WebP**.
-
-If the optimized file becomes **larger than the original**, the tool automatically keeps the original instead.
+Converted to **lossless WebP** before saving.
 
 ---
 
@@ -279,38 +270,48 @@ Output folder: ./images/web_optimized
 
 ---
 
-## Notes
+## Platform Support
 
-- Original images are **never overwritten**
-- Output files are stored in a separate folder
-- Animated GIFs are supported
-- Works on **Windows, macOS, and Linux**
+TinyPixels works on:
+
+- Windows
+- macOS
+- Linux
 
 ---
 
-## Licence
+## Contributing
 
-This project uses MIT licence.
+Contributions are welcome.
 
+Typical workflow:
 
-## How to Contribute
+1. Fork the repository
+2. Create a new branch
+3. Commit your changes
+4. Open a Pull Request
 
-- **Fork** the repository
-- **Create** a new branch for your feature or fix
-- **Commit** your changes. Please use standard of commit messaging (such as feat, fix, chore, etc.)
-- **Open** a Pull Request
-
-Contributions of any kind are welcome:
+Examples of contributions:
 
 - Bug fixes
 - Performance improvements
 - Documentation updates
 - New features
-- Code cleanup
 
+Please use conventional commit messages:
+
+```
+feat:
+fix:
+docs:
+refactor:
+chore:
+```
 
 ---
 
+## License
 
+This project is licensed under the **MIT License**.
 
-
+---
