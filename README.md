@@ -35,7 +35,43 @@ heic  heif  avif
 
 ## Installation
 
-### Install from source
+### Prerequisites
+
+- Python 3.9 or higher
+- `pip` package manager
+
+You can verify your Python version with:
+
+```
+python --version
+```
+
+---
+
+### Option 1 — Install with pipx (recommended)
+
+`pipx` installs CLI tools in isolated environments and makes them available globally.
+
+Install `pipx` if you don't have it:
+
+```
+pip install pipx
+
+pipx ensurepath
+```
+
+Then install **tinypixels**:
+
+```
+pipx install git+https://github.com/nafasebra/tinypixels.git
+```
+
+
+After installation, the `tinypixels` command will be available globally.
+
+---
+
+### Option 2 — Install from source
 
 Clone the repository:
 
@@ -44,33 +80,29 @@ git clone https://github.com/nafasebra/tinypixels
 cd tinypixels
 ```
 
-### Install the package:
+Install the package:
 
 ```
 pip install .
 ```
 
-For development mode:
-
+For development mode (editable install):
 ```
 pip install -e .
 ```
 
-After installation the global command becomes available:
-
+After installation the CLI command becomes available:
 ```
-tinypixels
+tinypixels <path> <options>
 ```
 
 ---
 
 ## Usage
 
-### Basic usage:
+### Basic usage
 
-```
-tinypixels <folder>
-```
+Optimize all images inside a folder:
 
 Example:
 
@@ -78,15 +110,44 @@ Example:
 tinypixels ./images
 ```
 
-By default optimized images are stored in:
+---
+
+### Output
+
+By default, optimized images are saved inside a new folder named:
 
 ```
 web_optimized/
 ```
 
-inside the input folder.
+This folder will be created inside the input directory.
+
+Example structure:
+
+```
+images/
+
+├─ photo1.jpg
+
+├─ photo2.png
+
+└─ web_optimized/
+
+├─ photo1.jpg
+
+└─ photo2.png
+```
 
 ---
+
+### Help command
+
+To see available options and commands:
+
+```
+tinypixels --help
+```
+
 
 ## CLI Options
 
