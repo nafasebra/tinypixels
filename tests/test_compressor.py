@@ -1,7 +1,7 @@
 import pytest
-from pathlib import Path
+# from pathlib import Path
 from PIL import Image
-import shutil
+# import shutil
 
 from tinypixels.compressor import format_size, compress_image, compress_folder
 
