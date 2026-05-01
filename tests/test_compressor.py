@@ -3,7 +3,7 @@ from pathlib import Path
 from PIL import Image
 import shutil
 import tempfile
-from compressor import (
+from src.tinypixels.compressor import (
     format_size,
     compress_image,
     compress_folder,
@@ -190,7 +190,7 @@ def test_cli_basic(monkeypatch, temp_dir, sample_rgb_image, capsys):
     img_dir.mkdir()
     shutil.copy2(sample_rgb_image, img_dir / sample_rgb_image.name)
 
-    from cli import main
+    from tinypixels.cli import main
 
     monkeypatch.setattr(
         "sys.argv",
