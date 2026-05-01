@@ -1,2 +1,5 @@
 Pillow>=10.0.0
 pillow-heif>=0.15.0
+
+PyGithub>=2.1.0
+pyyaml>=6.0
