@@ -58,7 +58,7 @@ Some formats may be converted internally before compression.
 ```bash
 pip install pipx
 pipx ensurepath
-pipx install git+https://github.com/PsymoNiko/tinypixels.git
+pipx install git+https://github.com/nafasebra/tinypixels.git
 ```
 
 After installation, the tinypixels command will be available globally in your terminal.
@@ -68,7 +68,7 @@ From source
 Clone the repository and install the package:
 
 ```bash
-git clone https://github.com/PsymoNiko/tinypixels.git
+git clone https://github.com/nafasebra/tinypixels.git
 cd tinypixels
 pip install .
 ```
