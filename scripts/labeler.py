@@ -12,8 +12,8 @@ import os
 import yaml
 import sys
 from github import Github
-from pathlib import Path
-from typing import Dict, List, Set
+# from pathlib import Path
+from typing import Dict, Set
 
 
 def load_config(config_path: str = ".github/labeler_config.yaml") -> Dict:
