@@ -28,16 +28,21 @@ def compress_image(img_file: Path, output_path: Path, force_format=None, jpeg_qu
             img.mode == "P" and "transparency" in img.info
         )
 
-        # اگر فرمت اجباری تعیین شده باشد
         if force_format:
             fmt = force_format.lower()
 
             if fmt == "jpeg" or fmt == "jpg":
-                if img.mode != "RGB":
-                    img = img.convert("RGB")
+                # If the image has alpha, replace it with while background
+                if img.mode in ("RGBA", "LA", "PA"):
+                    img_to_save = Image.new("RGB", img.size, (255, 255, 255))
+                    img_to_save.paste(img, mask=img.split()[-1])
+                elif img.mode != "RGB":
+                    img_to_save = img.convert("RGB")
+                else:
+                    img_to_save = img
 
                 output_file = output_path / (img_file.stem + ".jpg")
-                img.save(
+                img_to_save.save(
                     output_file,
                     format="JPEG",
                     quality=jpeg_quality,
@@ -159,7 +164,7 @@ def compress_image(img_file: Path, output_path: Path, force_format=None, jpeg_qu
 
     compressed_size = output_file.stat().st_size
 
-    if compressed_size >= original_size:
+    if not force_format and compressed_size >= original_size:
         import shutil
         shutil.copy2(img_file, output_file)
         compressed_size = original_size
