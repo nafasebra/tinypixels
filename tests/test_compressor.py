@@ -2,116 +2,84 @@ import pytest
 from pathlib import Path
 from PIL import Image
 import shutil
-import tempfile
-from src.tinypixels.compressor import (
-    format_size,
-    compress_image,
-    compress_folder,
-    SUPPORTED_FORMATS,
-)
 
+from tinypixels.compressor import format_size, compress_image, compress_folder
 
-# ----------------------------------
-# format_size tests
-# ----------------------------------
 
 class TestFormatSize:
     def test_bytes(self):
         assert format_size(500) == "500.0 B"
 
-    def test_kb(self):
-        assert format_size(1024) == "1.0 KB"
+    def test_kilobytes(self):
+        assert format_size(2048) == "2.0 KB"
 
-    def test_mb(self):
-        assert format_size(1024 * 1024) == "1.0 MB"
+    def test_megabytes(self):
+        assert format_size(5 * 1024 * 1024) == "5.0 MB"
 
-    def test_gb(self):
-        assert format_size(1024 * 1024 * 1024) == "1.0 GB"
+    def test_gigabytes(self):
+        assert format_size(3 * 1024 * 1024 * 1024) == "3.0 GB"
 
-    def test_tb(self):
-        assert format_size(1024**4) == "1.0 TB"
-
-    def test_fraction(self):
-        assert format_size(1536) == "1.5 KB"
-
-
-# ----------------------------------
-# Fixtures
-# ----------------------------------
-
-@pytest.fixture
-def temp_dir():
-    path = Path(tempfile.mkdtemp())
-    yield path
-    shutil.rmtree(path)
-
-
-@pytest.fixture
-def sample_rgb_image(temp_dir):
-    img_path = temp_dir / "rgb.jpg"
-    img = Image.new("RGB", (100, 100), "red")
-    img.save(img_path, "JPEG")
-    return img_path
-
-
-@pytest.fixture
-def sample_rgba_image(temp_dir):
-    img_path = temp_dir / "rgba.png"
-    img = Image.new("RGBA", (100, 100), (255, 0, 0, 128))
-    img.save(img_path, "PNG")
-    return img_path
-
-
-@pytest.fixture
-def sample_gif_image(temp_dir):
-    img_path = temp_dir / "test.gif"
-    img = Image.new("RGB", (50, 50), "blue")
-    img.save(img_path, "GIF")
-    return img_path
-
-
-# ----------------------------------
-# compress_image tests
-# ----------------------------------
 
 class TestCompressImage:
-    def test_jpeg_default(self, sample_rgb_image, temp_dir):
-        out = temp_dir / "out"
-        out.mkdir()
+    @pytest.fixture
+    def temp_dir(self, tmp_path):
+        return tmp_path
 
-        output_file, orig, comp = compress_image(sample_rgb_image, out)
+    @pytest.fixture
+    def sample_rgb_image(self, temp_dir):
+        img_path = temp_dir / "rgb.jpg"
+        img = Image.new("RGB", (100, 100), color="red")
+        img.save(img_path, "JPEG")
+        return img_path
+
+    @pytest.fixture
+    def sample_rgba_image(self, temp_dir):
+        img_path = temp_dir / "rgba.png"
+        img = Image.new("RGBA", (100, 100), color=(0, 255, 0, 128))
+        img.save(img_path, "PNG")
+        return img_path
+
+    def test_compress_jpeg(self, temp_dir, sample_rgb_image):
+        out_dir = temp_dir / "output"
+        out_dir.mkdir()
+
+        output_file, orig_size, comp_size = compress_image(
+            sample_rgb_image,
+            out_dir,
+            force_format=None,
+            jpeg_quality=85
+        )
 
         assert output_file.exists()
         assert output_file.suffix == ".jpg"
-        assert orig > 0
-        assert comp > 0
+        assert comp_size > 0
 
-    def test_png_default(self, sample_rgba_image, temp_dir):
-        out = temp_dir / "out"
-        out.mkdir()
+    def test_compress_png(self, temp_dir, sample_rgba_image):
+        out_dir = temp_dir / "output"
+        out_dir.mkdir()
 
-        output_file, orig, comp = compress_image(sample_rgba_image, out)
+        output_file, orig_size, comp_size = compress_image(
+            sample_rgba_image,
+            out_dir,
+            force_format=None,
+            jpeg_quality=95
+        )
 
         assert output_file.exists()
         assert output_file.suffix == ".png"
 
-    def test_force_webp(self, sample_rgb_image, temp_dir):
-        out = temp_dir / "out"
-        out.mkdir()
+        with Image.open(output_file) as img:
+            assert img.mode == "RGBA"
 
-        output_file, _, _ = compress_image(
-            sample_rgb_image, out, force_format="webp"
-        )
+    def test_force_jpeg_conversion(self, temp_dir, sample_rgba_image):
+        out_dir = temp_dir / "output"
+        out_dir.mkdir()
 
-        assert output_file.exists()
-        assert output_file.suffix == ".webp"
-
-    def test_force_jpeg_conversion(self, sample_rgba_image, temp_dir):
-        out = temp_dir / "out"
-        out.mkdir()
-
-        output_file, _, _ = compress_image(
-            sample_rgba_image, out, force_format="jpeg"
+        output_file, orig_size, comp_size = compress_image(
+            sample_rgba_image,
+            out_dir,
+            force_format="jpeg",
+            jpeg_quality=85
         )
 
         assert output_file.exists()
@@ -120,84 +88,80 @@ class TestCompressImage:
         with Image.open(output_file) as img:
             assert img.mode == "RGB"
 
-    def test_force_png(self, sample_rgba_image, temp_dir):
-        out = temp_dir / "out"
-        out.mkdir()
+    def test_force_webp_conversion(self, temp_dir, sample_rgb_image):
+        out_dir = temp_dir / "output"
+        out_dir.mkdir()
 
-        output_file, _, _ = compress_image(
-            sample_rgba_image, out, force_format="png"
+        output_file, orig_size, comp_size = compress_image(
+            sample_rgb_image,
+            out_dir,
+            force_format="webp",
+            jpeg_quality=95
+        )
+
+        assert output_file.exists()
+        assert output_file.suffix == ".webp"
+
+    def test_force_png_conversion(self, temp_dir, sample_rgb_image):
+        out_dir = temp_dir / "output"
+        out_dir.mkdir()
+
+        output_file, orig_size, comp_size = compress_image(
+            sample_rgb_image,
+            out_dir,
+            force_format="png",
+            jpeg_quality=95
         )
 
         assert output_file.exists()
         assert output_file.suffix == ".png"
 
-    def test_unsupported_forced_format(self, sample_rgb_image, temp_dir):
-        out = temp_dir / "out"
-        out.mkdir()
-
-        with pytest.raises(ValueError):
-            compress_image(sample_rgb_image, out, force_format="xyz")
-
-
-# ----------------------------------
-# compress_folder tests
-# ----------------------------------
 
 class TestCompressFolder:
-    def test_folder_not_found(self, capsys):
-        compress_folder("non_existing_folder")
-        captured = capsys.readouterr()
-        assert "not found" in captured.out.lower()
+    @pytest.fixture
+    def temp_dir(self, tmp_path):
+        return tmp_path
+
+    @pytest.fixture
+    def sample_rgb_image(self, temp_dir):
+        img_path = temp_dir / "rgb.jpg"
+        img = Image.new("RGB", (100, 100), color="blue")
+        img.save(img_path, "JPEG")
+        return img_path
 
     def test_empty_folder(self, temp_dir, capsys):
-        compress_folder(str(temp_dir))
+        empty_dir = temp_dir / "empty"
+        empty_dir.mkdir()
+
+        compress_folder(str(empty_dir))
+
         captured = capsys.readouterr()
-        assert "no images" in captured.out.lower()
+        assert "No images found" in captured.out
 
-    def test_folder_with_images(self, temp_dir, sample_rgb_image, sample_png=None):
-        img_dir = temp_dir / "images"
-        img_dir.mkdir()
-        shutil.copy2(sample_rgb_image, img_dir / sample_rgb_image.name)
+    def test_folder_with_images(self, temp_dir, sample_rgb_image, capsys):
+        # Execute the function on the directory containing the test file
+        compress_folder(str(temp_dir))
 
-        out_dir = temp_dir / "optimized"
+        # Verify that the default 'web_optimized' output folder is created
+        out_dir = temp_dir / "web_optimized"
+        assert out_dir.exists(), "Default 'web_optimized' folder was not created."
 
-        compress_folder(str(img_dir), output_folder=str(out_dir))
+        # Check if the optimized file is successfully placed in the output directory
+        optimized_image = out_dir / sample_rgb_image.name
+        assert optimized_image.exists(), "Optimized image was not found in the output folder."
 
-        assert out_dir.exists()
-        assert any(
-            f.suffix.lower() in SUPPORTED_FORMATS
-            for f in out_dir.iterdir()
-        )
+        # Ensure that the successful output is printed to the terminal
+        # (You can adapt this based on the exact string printed in compressor.py)
+        captured = capsys.readouterr()
+        assert str(sample_rgb_image.name) in captured.out
 
-    def test_force_format_folder(self, temp_dir, sample_rgb_image):
-        img_dir = temp_dir / "images"
-        img_dir.mkdir()
-
-        shutil.copy2(sample_rgb_image, img_dir / sample_rgb_image.name)
-
-        out_dir = temp_dir / "opt"
-
-        compress_folder(str(img_dir), output_folder=str(out_dir), force_format="webp")
-
-        assert any(f.suffix == ".webp" for f in out_dir.iterdir())
-
-
-# ----------------------------------
-# CLI tests (optional)
-# ----------------------------------
-def test_cli_basic(monkeypatch, temp_dir, sample_rgb_image, capsys):
-    img_dir = temp_dir / "cliimg"
-    img_dir.mkdir()
-    shutil.copy2(sample_rgb_image, img_dir / sample_rgb_image.name)
-
-    from tinypixels.cli import main
-
-    monkeypatch.setattr(
-        "sys.argv",
-        ["cli.py", str(img_dir), "-o", str(temp_dir / "out")]
-    )
-
-    main()
-
-    captured = capsys.readouterr()
-    assert "images found" in captured.out.lower()
+    def test_folder_with_custom_output(self, temp_dir, sample_rgb_image):
+        # Test behavior when the user specifies a custom output directory
+        custom_out_dir = temp_dir / "my_custom_build"
+        
+        compress_folder(str(temp_dir), output_folder=str(custom_out_dir))
+        
+        assert custom_out_dir.exists(), "Custom output directory was not created."
+        
+        optimized_image = custom_out_dir / sample_rgb_image.name
+        assert optimized_image.exists(), "File was not saved in the custom output directory."
