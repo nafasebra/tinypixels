@@ -1,6 +1,3 @@
-import os
-import sys
-import argparse
 from pathlib import Path
 from PIL import Image
 
