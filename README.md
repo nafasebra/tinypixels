@@ -28,7 +28,10 @@ Designed to be simple, fast, and useful for developers preparing images for the 
 
 TinyPixels supports most commonly used image formats:
 
-- **jpg** · **jpeg** · **png** · **webp** · **bmp** · **tiff** · **tif** · **gif** · **ico** · **heic** · **heif** · **avif**
+```
+jpg · jpeg · png · webp · bmp · tiff · tif · gif · ico · heic · heif · avif
+```
+
 
 Some formats may be converted internally before compression.
 
@@ -48,6 +51,7 @@ Some formats may be converted internally before compression.
 ## 🚀 Installation
 
 ### Requirements
+
 - **Python 3.9+** – Check your version with `python --version`
 - **pip** – Usually included with Python
 
@@ -63,7 +67,7 @@ pipx install git+https://github.com/nafasebra/tinypixels.git
 
 After installation, the tinypixels command will be available globally in your terminal.
 
-From source
+#### From source
 
 Clone the repository and install the package:
 
@@ -85,7 +89,7 @@ If you prefer pipx for development:
 pipx install .
 ```
 
-🎯 Quick Start
+#### 🎯 Quick Start
 
 Compress all images inside a folder with one command:
 
@@ -95,7 +99,7 @@ tinypixels ./images
 
 TinyPixels automatically creates an output folder and saves the optimized images there. Original files remain untouched.
 
-🛠️ CLI Usage
+#### 🛠️ CLI Usage
 
 ```
 tinypixels <folder> [options]
@@ -103,21 +107,23 @@ tinypixels <folder> [options]
 
 Examples
 
-Command Description
-tinypixels images Compress all images in the "images" folder
+```
+tinypixels images # Compress all images in the "images" folder
 tinypixels images -o optimized Save optimized images to a custom directory
-tinypixels images -f webp Convert all images to WebP format
-tinypixels images -q 85 Set JPEG quality to 85 (default is 95)
-tinypixels images -o output -f webp -q 85 Combine multiple options
+tinypixels images -f # webp Convert all images to WebP format
+tinypixels images -q 85 # Set JPEG quality to 85 (default is 95)
+tinypixels images -o output -f webp -q 85  # Combine multiple options
+```
 
 Options
 
-Option Description
+```
 -o, --output Output directory for optimized images
 -f, --format Force output format (webp, jpeg/jpg, png)
 -q, --quality JPEG quality (integer, default: 95)
+```
 
-📁 Output Behavior
+#### 📁 Output Behavior
 
 By default, optimized images are stored in a folder named web_optimized/ created inside the input directory. For example:
 
@@ -132,7 +138,7 @@ images/
 
 Note: Original images are never overwritten. If compression doesn't reduce file size, the original is kept in the output folder.
 
-🔧 How It Works
+#### 🔧 How It Works
 
 For every image in the input folder:
 
@@ -142,62 +148,37 @@ For every image in the input folder:
 4. Save – The optimized image is saved to the output folder
 5. Compare – If the optimized image becomes larger than the original, the original file is kept instead
 
-⚙️ Compression Settings
+#### ⚙️ Compression Settings
 
 TinyPixels uses carefully tuned parameters for each format to balance quality and file size:
 
 Format Settings
-PNG compress_level=9 – Maximum optimization; transparency preserved
-JPEG Adjustable quality; subsampling=0 for better color accuracy; progressive encoding
-WebP High compression method; lossless when appropriate
-GIF Animation frames preserved; rebuilt for optimization
-Other formats (HEIC, TIFF, BMP, etc.) Converted to lossless WebP before saving
+- PNG compress_level=9 – Maximum optimization; transparency preserved
+- JPEG Adjustable quality; subsampling=0 for better color accuracy; progressive encoding
+- WebP High compression method; lossless when appropriate
+- GIF Animation frames preserved; rebuilt for optimization
+- Other formats (HEIC, TIFF, BMP, etc.) Converted to lossless WebP before saving
 
-💻 Platform Support
+#### 💻 Platform Support
 
 TinyPixels works on:
 
-· Windows
-· macOS
-· Linux
+- Windows
+- macOS
+- Linux
 
-⚠️ Limitations
+### ⚠️ Limitations
 
-· No metadata preservation – EXIF data (camera settings, GPS coordinates) is removed during compression
-· Format conversion caution – Converting between formats may result in some quality loss, especially from lossy to lossy formats
-· Large GIFs – Complex animated GIFs may not see significant size reduction
+- No metadata preservation – EXIF data (camera settings, GPS coordinates) is removed during compression
+- Format conversion caution – Converting between formats may result in some quality loss, especially from lossy to lossy formats
+- Large GIFs – Complex animated GIFs may not see significant size reduction
 
-🤝 Contributing
+## 🤝 Contributing
 
 We welcome contributions! Whether it's reporting a bug, suggesting a feature, or submitting a pull request, please follow our Code of Conduct.
 
-Development Setup
-
-1. Fork the repository
-2. Clone your fork: git clone https://github.com/YOUR_USERNAME/tinypixels.git
-3. Install development dependencies: pip install -e ".[dev]"
-4. Create a branch for your feature: git checkout -b feature/amazing-feature
-5. Run tests before submitting: pytest tests/
-6. Open a Pull Request from your branch to PsymoNiko/tinypixels:main
-
-Reporting Issues
-
-When opening an issue, please include:
-
-· Your operating system and Python version
-· A minimal example that reproduces the problem
-· Expected vs. actual behavior
-
-Commit Convention
-
-We use conventional commit messages:
-
-· feat: – new feature
-· fix: – bug fix
-· docs: – documentation update
-· refactor: – code refactoring
-· chore: – maintenance tasks
+Before Contributing, see [CONTRIBUTING.md](CONTRIBUTING.md)
 
 📜 License
 
-This project is licensed under the MIT License – see the LICENSE file for details.
+This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
