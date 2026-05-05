@@ -3,7 +3,7 @@ description: Report missing, unclear, or outdated documentation.
 title: "[Docs]: "
 labels: ["type: documentation"]
 assignees:
-  - PsymoNiko
+  - nafasebra
 body:
   - type: markdown
     attributes:
@@ -39,7 +39,7 @@ body:
       description: Please provide a link or describe where the documentation needs to be updated.
       placeholder: |
         - In the README, under "Installation"
-        - https://github.com/PsymoNiko/tinypixels#-cli-usage
+        - https://github.com/nafasebra/tinypixels#-cli-usage
     validations:
       required: false
 
@@ -47,7 +47,7 @@ body:
     id: terms
     attributes:
       label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/PsymoNiko/tinypixels/blob/main/CODE_OF_CONDUCT.md)
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/nafasebra/tinypixels/blob/main/CODE_OF_CONDUCT.md)
       options:
         - label: I agree to follow this project's Code of Conduct
           required: true
