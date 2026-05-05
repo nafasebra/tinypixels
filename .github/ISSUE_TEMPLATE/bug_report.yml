@@ -3,7 +3,6 @@ description: File a bug report to help us improve TinyPixels.
 title: "[Bug]: "
 labels: ["type: bug", "status: needs-triage"]
 assignees:
-  - PsymoNiko
   - nafasebra
 body:
   - type: markdown
