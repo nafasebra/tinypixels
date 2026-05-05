@@ -4,6 +4,7 @@ title: "[Bug]: "
 labels: ["type: bug", "status: needs-triage"]
 assignees:
   - PsymoNiko
+  - nafasebra
 body:
   - type: markdown
     attributes:
@@ -15,7 +16,7 @@ body:
     attributes:
       label: Contact Details
       description: How can we get in touch with you if we need more info?
-      placeholder: ex. email@example.com
+      placeholder: ex. callmeali@duck.com
     validations:
       required: false
 
@@ -92,7 +93,7 @@ body:
     id: terms
     attributes:
       label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/PsymoNiko/tinypixels/blob/main/CODE_OF_CONDUCT.md) (if available)
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/nafasebra/tinypixels/blob/main/CODE_OF_CONDUCT.md) (if available)
       options:
         - label: I agree to follow this project's Code of Conduct
           required: true
